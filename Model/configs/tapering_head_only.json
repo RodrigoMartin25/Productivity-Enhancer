@@ -1,0 +1,17 @@
+{
+  "model_name": "microsoft/deberta-v3-xsmall",
+  "dataset_name": "Rodrigo-Martin/productivity_enhancer",
+  "train_split": "train",
+  "validation_split": "test",
+  "head": "tapering",
+  "num_labels": 3,
+  "head_hidden_size": 192,
+  "freeze_backbone": true,
+  "max_length": 128,
+  "batch_size": 30,
+  "learning_rate": 0.001,
+  "epochs": 15,
+  "seed": 42,
+  "device": "cpu",
+  "output_dir": "Model/runs/tapering_head_15_epochs"
+}
