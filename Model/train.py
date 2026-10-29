@@ -41,6 +41,8 @@ def train(config):
 
     history = []
     best_f1 = -1.0
+    class_counts = torch.tensor([85, 252, 530])
+    weights = class_counts.sum() / (len(class_counts) * class_counts)
 
     # Training Loop
     for epoch in range(1, config["epochs"] + 1):
@@ -61,7 +63,7 @@ def train(config):
                 attention_mask=batch["attention_mask"].to(device),
             )
 
-            loss = F.cross_entropy(logits, labels)
+            loss = F.cross_entropy(logits, labels, weight=weights)
             loss.backward()
             optimizer.step()
 
