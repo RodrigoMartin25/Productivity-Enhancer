@@ -51,3 +51,33 @@ and register them in `build_model`; the training and evaluation code can be reus
 The model returns raw logits for cross-entropy loss. For inference probabilities,
 use `logits.softmax(dim=-1)`. W&B integration is not included; metrics are currently
 printed and saved locally.
+
+## Common Pile dataset
+
+The published [Common Pile release](https://huggingface.co/datasets/Rodrigo-Martin/productivity_enhancer_common_pile)
+contains 6,000 examples, with 2,000 per class. It uses the same `video_title`,
+`video_description`, and `productivity_label` columns. Labels are based on titles
+only, matching the current model input:
+
+- `0`: science and technical education, including mathematics, computing,
+  engineering, natural sciences, and medical science.
+- `1`: other instruction or substantive explanation, such as history, languages,
+  cooking, arts, fitness, and finance.
+- `2`: non-educational content, including entertainment, performances, promotion,
+  personal updates, and news without substantive teaching or explanation.
+
+The splits contain 4,800 training, 600 validation, and 600 test examples, balanced
+within each split, with no shared channels between splits. Use the matching
+experiment configs:
+
+```sh
+python -m Model.train --config Model/configs/common_pile_head_only.json
+python -m Model.train --config Model/configs/common_pile_full.json
+```
+
+The current training loop uses unweighted cross-entropy. The release's labels are
+AI-generated; use an independently human-labeled sample to assess real-world
+blocking quality. Source attribution, the full label policy, and preparation
+details are preserved in the published dataset card and accompanying files. The
+one-time labeling pipeline and local downloads have been removed from this project;
+training loads the published dataset directly from Hugging Face.
