@@ -1,5 +1,6 @@
 """Model definitions."""
 
+import torch
 import torch.nn as nn
 from transformers import AutoModel
 
@@ -11,7 +12,9 @@ class ProdEnhancer_tapering(nn.Module):
         super().__init__()
 
         # Every instance gets its own pretrained backbone.
-        self.Deberta = AutoModel.from_pretrained(model_name)
+        # Checkpoints may load in float16 by default. Keep trainable weights and
+        # Adam's optimizer state in float32 to avoid half-precision underflow.
+        self.Deberta = AutoModel.from_pretrained(model_name, dtype=torch.float32)
         self.dense_1 = nn.Linear(self.Deberta.config.hidden_size, head_hidden_size)
         self.activation = nn.GELU()
         self.dense_2 = nn.Linear(head_hidden_size, num_labels)
